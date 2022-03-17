@@ -2,11 +2,11 @@
   <div class="header">
     <div class="left">
       <el-button
-        @click="$router.push('/home')"
+        @click="$router.push('/')"
         type="text"
         size="large"
-        style="font-size: 2rem"
-        >Lunar</el-button
+        style="font-size: 1.5rem"
+        >Lunar博客</el-button
       >
     </div>
     <div class="center">
@@ -19,7 +19,13 @@
       <el-button
         style="border: none; font-size: larger"
         size="large"
-        @click="$router.push('/home')"
+        @click="$router.push('/userPage')"
+        >用户页面</el-button
+      >
+      <el-button
+        style="border: none; font-size: larger"
+        size="large"
+        @click="$router.push('/management')"
         >管理员页面</el-button
       >
     </div>

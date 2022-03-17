@@ -1,8 +1,8 @@
 <template>
-  <div class="home">
+  <div class="userPage">
     <Header />
     <div class="content">
-      <Aside :items="homeItems" />
+      <Aside :items="userPageItems" />
       <el-card>
         <router-view id="view" />
       </el-card>
@@ -14,22 +14,38 @@
 import Header from "../components/Header.vue";
 import Aside from "../components/Aside.vue";
 
-const homeItems = [
+//定义userPage页面的Aside
+const userPageItems = [
   {
-    index: "/home/blogRecommend",
-    iconClass: "",
-    title: "博客乱炖",
+    index: "/userPage/profile",
+    iconClass: "fa fa-commenting-o",
+    title: "个人信息",
   },
   {
-    index: "/home/service",
+    index: "/userPage/blog",
     iconClass: "",
-    title: "网站服务",
+    title: "我的博客",
+  },
+  {
+    index: "/userPage/friend",
+    iconClass: "fa fa-user-plus",
+    title: "我的好友",
+  },
+  {
+    index: "/userPage/favorites",
+    iconClass: "",
+    title: "我的收藏",
+  },
+  {
+    index: "/userPage/message",
+    iconClass: "",
+    title: "我的消息",
   },
 ];
 </script>
 
 <style scoped>
-.home {
+.userPage {
   font-size: 1rem;
   height: 100vh;
   width: 100vw;

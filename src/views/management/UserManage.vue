@@ -132,8 +132,8 @@
 </template>
 
 <script lang="ts" setup>
-import request from "../utils/request";
-import FDate from "../utils/FormatedDate";
+import request from "../../utils/request";
+import FDate from "../../utils/FormatedDate";
 import { ElMessage } from "element-plus";
 import { ref } from "vue";
 

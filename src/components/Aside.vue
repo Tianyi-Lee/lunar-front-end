@@ -7,31 +7,19 @@
       @open="handleOpen"
       @close="handleClose"
     >
-      <el-menu-item index="/profile">
-        <i class="fa fa-user" aria-hidden="true"></i>
-        <template #title>个人信息</template>
-      </el-menu-item>
-
-      <el-menu-item index="/friend">
-        <i class="fa fa-user-plus" aria-hidden="true"></i>
-        <template #title>我的好友</template>
-      </el-menu-item>
-
-      <el-menu-item index="/usermanage">
-        <i class="fa fa-commenting-o" aria-hidden="true"></i>
-        <template #title>用户管理</template>
+      <el-menu-item v-for="item in items" :index="item.index">
+        <i :class="item.iconClass" aria-hidden="true"></i>
+        <template #title>{{ item.title }}</template>
       </el-menu-item>
     </el-menu>
   </el-card>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, defineProps, PropType } from "vue";
 import { useRoute } from "vue-router";
 
-const route = useRoute();
-let currentPath = ref(route.path);
-
+//实现侧边栏的两个回调函数
 function handleOpen(key: string, keyPath: string[]) {
   console.log(key, keyPath);
 }
@@ -39,6 +27,20 @@ function handleOpen(key: string, keyPath: string[]) {
 function handleClose(key: string, keyPath: string[]) {
   console.log(key, keyPath);
 }
+
+//currentPath和当前的路径绑定
+const route = useRoute();
+let currentPath = ref(route.path);
+
+//声明Aside的props以实现Aside项目动态更改
+interface menuItem {
+  index: string;
+  iconClass: string;
+  title: string;
+}
+defineProps({
+  items: { type: Array as PropType<menuItem[]>, required: true },
+});
 </script>
 
 <style scoped>

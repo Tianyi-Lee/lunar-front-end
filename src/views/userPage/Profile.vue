@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useInfoStore } from "../stores/info";
+import { useInfoStore } from "../../stores/info";
 import { storeToRefs } from "pinia";
 
 const info = useInfoStore();

@@ -11,7 +11,7 @@
       >
         <el-form-item>
           <img src="../assets/images/websitelogo.svg" alt="logo" />
-          <el-button type="text" @click="$router.push('/home')" class="title">
+          <el-button type="text" @click="$router.push('/')" class="title">
             lunar</el-button
           >
         </el-form-item>

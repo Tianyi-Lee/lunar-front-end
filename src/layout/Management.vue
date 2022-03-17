@@ -1,8 +1,8 @@
 <template>
-  <div class="layout">
+  <div class="management">
     <Header />
     <div class="content">
-      <Aside />
+      <Aside :items="managementItems" />
       <el-card>
         <router-view id="view" />
       </el-card>
@@ -13,10 +13,28 @@
 <script lang="ts" setup>
 import Header from "../components/Header.vue";
 import Aside from "../components/Aside.vue";
+
+const managementItems = [
+  {
+    index: "/management/logStatistics",
+    iconClass: "",
+    title: "日志统计",
+  },
+  {
+    index: "/management/infoManage",
+    iconClass: "",
+    title: "信息管理",
+  },
+  {
+    index: "/management/userManage",
+    iconClass: "",
+    title: "用户管理",
+  },
+];
 </script>
 
 <style scoped>
-.layout {
+.management {
   font-size: 1rem;
   height: 100vh;
   width: 100vw;
