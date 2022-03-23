@@ -8,6 +8,7 @@ import zhCn from "element-plus/es/locale/lang/zh-cn";
 
 import "./assets/css/global.less";
 import "./assets/css/font-awesome.min.css";
+import "animate.css";
 
 createApp(App)
   .use(ElementPlus, {

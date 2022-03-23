@@ -17,17 +17,17 @@ import Aside from "../components/Aside.vue";
 const managementItems = [
   {
     index: "/management/logStatistics",
-    iconClass: "",
+    iconClass: "fa fa-pie-chart",
     title: "日志统计",
   },
   {
     index: "/management/infoManage",
-    iconClass: "",
+    iconClass: "fa fa-file-text-o",
     title: "信息管理",
   },
   {
     index: "/management/userManage",
-    iconClass: "",
+    iconClass: "fa fa-user-o",
     title: "用户管理",
   },
 ];

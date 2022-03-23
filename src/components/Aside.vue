@@ -7,16 +7,21 @@
       @open="handleOpen"
       @close="handleClose"
     >
-      <el-menu-item v-for="item in items" :index="item.index">
+      <el-menu-item v-for="item in items" :key="item.index" :index="item.index">
         <i :class="item.iconClass" aria-hidden="true"></i>
-        <template #title>{{ item.title }}</template>
+        <template #title>
+          <el-badge v-if="item.index === '/userPage/message'" value="new"
+            >{{ item.title }}
+          </el-badge>
+          <span v-else>{{ item.title }}</span>
+        </template>
       </el-menu-item>
     </el-menu>
   </el-card>
 </template>
 
 <script lang="ts" setup>
-import { ref, defineProps, PropType } from "vue";
+import { ref, PropType } from "vue";
 import { useRoute } from "vue-router";
 
 //实现侧边栏的两个回调函数

@@ -18,12 +18,12 @@ import Aside from "../components/Aside.vue";
 const userPageItems = [
   {
     index: "/userPage/profile",
-    iconClass: "fa fa-commenting-o",
+    iconClass: "fa fa-info-circle",
     title: "个人信息",
   },
   {
     index: "/userPage/blog",
-    iconClass: "",
+    iconClass: "fa fa-book",
     title: "我的博客",
   },
   {
@@ -33,12 +33,12 @@ const userPageItems = [
   },
   {
     index: "/userPage/favorites",
-    iconClass: "",
+    iconClass: "fa fa-folder-open-o",
     title: "我的收藏",
   },
   {
     index: "/userPage/message",
-    iconClass: "",
+    iconClass: "fa fa-commenting-o",
     title: "我的消息",
   },
 ];

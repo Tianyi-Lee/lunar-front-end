@@ -9,22 +9,24 @@
         size="default"
         :rules="rules"
       >
-        <el-form-item>
+        <el-form-item class="animate__animated animate__swing">
           <img src="../assets/images/websitelogo.svg" alt="logo" />
           <el-button @click="$router.push('/')" type="text" class="title">
             lunar
           </el-button>
         </el-form-item>
-        <el-form-item label="手机号:" prop="userAccount">
+        <el-form-item label="账号:" prop="userAccount">
           <el-input
             v-model="registerForm.userAccount"
             placeholder="请输入手机号"
+            :prefix-icon="User"
           />
         </el-form-item>
         <el-form-item label="昵称:" prop="userName">
           <el-input
             v-model="registerForm.userName"
             placeholder="请输入您喜欢的昵称"
+            :prefix-icon="MagicStick"
           />
         </el-form-item>
         <el-form-item label="密码:" prop="userPassword">
@@ -32,6 +34,7 @@
             v-model="registerForm.userPassword"
             type="password"
             placeholder="请输入密码"
+            :prefix-icon="Lock"
             show-password
           />
         </el-form-item>
@@ -40,6 +43,7 @@
             v-model="registerForm.confirm"
             type="password"
             placeholder="再次输入密码"
+            :prefix-icon="Lock"
             show-password
           />
         </el-form-item>
@@ -61,6 +65,7 @@
 
 <script lang="ts" setup>
 import { ElMessage } from "element-plus";
+import { User, Lock, MagicStick } from "@element-plus/icons-vue";
 import request from "../utils/request";
 import FDate from "../utils/FormatedDate";
 import { useRouter } from "vue-router";
@@ -85,7 +90,6 @@ function confirmPassword(rule: any, value: any, callback: any) {
     callback(new Error("两次密码不一致"));
   } else {
     callback();
-    console.log("是这里吗");
   }
 }
 

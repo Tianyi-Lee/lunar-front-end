@@ -2,7 +2,7 @@ import axios from "axios";
 
 const request = axios.create({
   baseURL: "/api",
-  timeout: 5000,
+  timeout: 3000,
 });
 
 /**
@@ -12,6 +12,7 @@ const request = axios.create({
 request.interceptors.request.use(
   (config: any) => {
     config.headers["Content-Type"] = "application/json;charset=utf-8";
+    // config.headers["Token"] = "hahahaha!!!";
     return config;
   },
   (error) => {

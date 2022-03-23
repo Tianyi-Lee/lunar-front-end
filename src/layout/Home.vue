@@ -17,12 +17,12 @@ import Aside from "../components/Aside.vue";
 const homeItems = [
   {
     index: "/home/blogRecommend",
-    iconClass: "",
+    iconClass: "fa fa-free-code-camp",
     title: "博客乱炖",
   },
   {
     index: "/home/service",
-    iconClass: "",
+    iconClass: "fa fa-question-circle",
     title: "网站服务",
   },
 ];

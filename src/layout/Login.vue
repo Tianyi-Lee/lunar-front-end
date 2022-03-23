@@ -9,7 +9,7 @@
         size="default"
         :rules="rules"
       >
-        <el-form-item>
+        <el-form-item class="animate__animated animate__bounce">
           <img src="../assets/images/websitelogo.svg" alt="logo" />
           <el-button type="text" @click="$router.push('/')" class="title">
             lunar</el-button
@@ -92,13 +92,14 @@ function login(formEl: FormInstance | undefined) {
     if (valid) {
       request.post("/login", loginForm).then((res: any) => {
         if (res.code == "200") {
-          console.log(res.data);
+          const response = res.data.user;
+          sessionStorage.setItem("userId", response.userId);
 
           ElMessage({
             type: "success",
             message: "登录成功",
           });
-          router.push("/");
+          router.push("/home");
         } else {
           ElMessage({
             type: "error",

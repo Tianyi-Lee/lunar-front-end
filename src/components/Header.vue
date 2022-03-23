@@ -5,8 +5,9 @@
         @click="$router.push('/')"
         type="text"
         size="large"
-        style="font-size: 1.5rem"
-        >Lunar博客</el-button
+        style="font-size: 2rem"
+        class="animate__animated animate__rubberBand"
+        >Lunar</el-button
       >
     </div>
     <div class="center">
@@ -14,26 +15,40 @@
         style="border: none; font-size: larger"
         size="large"
         @click="$router.push('/home')"
-        >主页</el-button
-      >
+        ><i class="fa fa-home" aria-hidden="true"></i>home
+      </el-button>
+      <el-divider direction="vertical" />
       <el-button
         style="border: none; font-size: larger"
         size="large"
         @click="$router.push('/userPage')"
-        >用户页面</el-button
+        ><i class="fa fa-user" aria-hidden="true"></i>user</el-button
       >
+      <el-divider direction="vertical" />
       <el-button
         style="border: none; font-size: larger"
         size="large"
         @click="$router.push('/management')"
-        >管理员页面</el-button
-      >
+        ><i class="fa fa-tachometer" aria-hidden="true"></i>manager
+      </el-button>
+      <div style="width: 100%; display: flex; justify-content: center">
+        <el-input
+          v-model="searchContent"
+          style="width: 40%"
+          placeholder="输入关键词搜索"
+          :prefix-icon="Search"
+        />
+        <el-button style="margin: 0 0 0 2vw" type="primary" :icon="Search" />
+      </div>
     </div>
     <div class="right">
       <el-dropdown :hide-on-click="false" trigger="hover">
-        <el-button type="text" plain style="color: dodgerblue; font-size: 18px">
+        <el-button type="text" style="font-size: 1.25rem">
           <div style="margin-right: 5px">
-            <el-avatar :size="30" src="">头像</el-avatar>
+            <el-avatar
+              :size="30"
+              src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
+            ></el-avatar>
           </div>
           {{ username }}
           <el-icon class="el-icon--right">
@@ -42,8 +57,12 @@
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item disabled>攻击本站</el-dropdown-item>
-            <el-dropdown-item @click="$router.push('/login')" divided
+            <el-dropdown-item disabled
+              ><i class="fa fa-bomb" aria-hidden="true"></i
+              >攻击本站</el-dropdown-item
+            >
+            <el-dropdown-item @click="$router.push('/')" divided
+              ><i class="fa fa-sign-out" aria-hidden="true"></i
               >退出系统</el-dropdown-item
             >
           </el-dropdown-menu>
@@ -55,12 +74,19 @@
 
 <script lang="ts" setup>
 import { ArrowDown } from "@element-plus/icons-vue";
+
+import { Search } from "@element-plus/icons-vue";
+
 import { ref } from "vue";
 
 let username = ref("张三");
+let searchContent = ref("");
 </script>
 
 <style scoped>
+i {
+  margin-right: 5px;
+}
 .header {
   height: 8vh;
   width: 100vw;
