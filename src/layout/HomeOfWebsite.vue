@@ -26,7 +26,7 @@
       <div class="main-right">
         <el-card id="card">
           <el-scrollbar height="480px">
-            <el-button
+            <div
               v-for="(item, index) in blogItems"
               :key="item.blogId"
               class="scrollbar-demo-item"
@@ -37,7 +37,8 @@
               "
               type="text"
               @click="show(item, index)"
-              ><div class="itemClass">
+            >
+              <div class="itemClass">
                 <p>{{ `博客标题:${item.blogTitle}` }}</p>
                 <p>{{ `博客作者:${item.blogAuthorName}` }}</p>
                 <p>
@@ -49,8 +50,8 @@
                   >
                 </p>
                 <p style="padding-left: 30px">{{ `${item.blogDigest}` }}</p>
-              </div></el-button
-            >
+              </div>
+            </div>
 
             <el-dialog
               top="10vh"
@@ -60,7 +61,7 @@
               :title="currentBlog.blogTitle"
             >
               <div class="myDialogClass">
-                <div class="aside">
+                <div ref="lbtnRef" class="aside">
                   <el-tooltip content="上一篇" placement="right">
                     <el-button
                       type="primary"
@@ -73,7 +74,7 @@
                 <div style="width: 90%; height: 100%">
                   <p v-html="currentBlog.blogDigest"></p>
                 </div>
-                <div class="aside">
+                <div ref="rbtnRef" class="aside">
                   <el-tooltip content="下一篇" placement="left">
                     <el-button
                       type="primary"
@@ -179,6 +180,7 @@ const next = () => {
 <style scoped lang="less">
 .itemClass {
   color: black;
+  cursor: pointer;
   p {
     margin: 15px;
     .tag {

@@ -104,7 +104,7 @@ const loaduserInfo = () => {
     userInfo.value = res.data;
   });
 };
-loaduserInfo();
+// loaduserInfo();
 const show = () => {
   ElMessage({
     type: "success",
