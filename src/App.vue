@@ -15,4 +15,7 @@ const userInfo = useUserInfoStore();
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.el-dialog {
+  margin-bottom: 0 !important;
+}
 </style>

@@ -16,7 +16,7 @@
     <div class="main">
       <div class="main-left">
         <div class="main-left-content">
-          <el-carousel style="height: 510px" direction="vertical">
+          <el-carousel style="height: 530px" direction="vertical">
             <el-carousel-item v-for="item in 4" :key="item">
               <h3>{{ item }}</h3>
             </el-carousel-item>
@@ -24,25 +24,33 @@
         </div>
       </div>
       <div class="main-right">
-        <el-card id="card">
-          <el-scrollbar height="480px">
+        <div id="card">
+          <el-scrollbar>
             <div
               v-for="(item, index) in blogItems"
               :key="item.blogId"
               class="scrollbar-demo-item"
-              style="
-                align-items: flex-start;
-                justify-content: left;
-                text-align: left;
-              "
               type="text"
               @click="show(item, index)"
             >
               <div class="itemClass">
-                <p>{{ `博客标题:${item.blogTitle}` }}</p>
-                <p>{{ `博客作者:${item.blogAuthorName}` }}</p>
+                <p style="font-size: 2rem">{{ item.blogTitle }}</p>
+
                 <p>
-                  博客标签:<el-tag
+                  <i class="fa fa-user" aria-hidden="true"></i
+                  >{{ item.blogAuthorName }}
+                  <i
+                    style="margin-left: 2vw"
+                    class="fa fa-clock-o"
+                    aria-hidden="true"
+                  ></i
+                  >{{ `创建时间` }}
+                </p>
+
+                <p>
+                  <i class="fa fa-tags" aria-hidden="true"></i
+                  ><el-tag
+                    style="margin-right: 1vw"
                     class="ml-2 tag"
                     effect="dark"
                     v-for="tag in item.blogTags"
@@ -52,50 +60,40 @@
                 <p style="padding-left: 30px">{{ `${item.blogDigest}` }}</p>
               </div>
             </div>
-
-            <el-dialog
-              top="10vh"
-              width="80%"
-              :center="true"
-              v-model="dialogVisible"
-              :title="currentBlog.blogTitle"
-            >
-              <div class="myDialogClass">
-                <div ref="lbtnRef" class="aside">
-                  <el-tooltip content="上一篇" placement="right">
-                    <el-button
-                      type="primary"
-                      :icon="ArrowLeftBold"
-                      circle
-                      @click="last()"
-                    />
-                  </el-tooltip>
-                </div>
-                <div style="width: 90%; height: 100%">
-                  <p v-html="currentBlog.blogDigest"></p>
-                </div>
-                <div ref="rbtnRef" class="aside">
-                  <el-tooltip content="下一篇" placement="left">
-                    <el-button
-                      type="primary"
-                      :icon="ArrowRightBold"
-                      circle
-                      @click="next()"
-                    />
-                  </el-tooltip>
-                </div>
-              </div>
-            </el-dialog>
           </el-scrollbar>
-        </el-card>
+        </div>
       </div>
     </div>
+    <el-dialog
+      custom-class="theFuckingDialogClass"
+      :show-close="false"
+      top="3vh"
+      v-model="dialogVisible"
+      center
+      width="80%"
+    >
+      <template #title>
+        <p style="font-size: 2rem; font-weight: 500">
+          {{ currentBlog.blogTitle }}
+        </p>
+      </template>
+
+      <div style="height: 77vh; overflow: auto">
+        <el-scrollbar style="padding-right: 1%">
+          <Editor
+            codeStyle="monokai"
+            fontSize="18px"
+            :html="false"
+            style="height: 100%; width: 100%; min-height: 74vh"
+          />
+        </el-scrollbar>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import { ArrowLeftBold, ArrowRightBold } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
 
 let blogItems = [
@@ -178,39 +176,6 @@ const next = () => {
 </script>
 
 <style scoped lang="less">
-.itemClass {
-  color: black;
-  cursor: pointer;
-  p {
-    margin: 15px;
-    .tag {
-      margin: 0 15px;
-    }
-  }
-}
-.myDialogClass {
-  height: 70vh;
-  display: flex;
-  .aside {
-    width: 5%;
-    height: 100%;
-    display: grid;
-    place-items: center;
-  }
-}
-.scrollbar-demo-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 150px;
-  width: 98%;
-  margin: 10px;
-  text-align: center;
-  border-radius: 4px;
-  background: var(--el-color-primary-light-9);
-  color: var(--el-color-primary);
-}
-
 .home {
   height: 100vh;
   width: 100vw;
@@ -257,11 +222,12 @@ const next = () => {
     .main-left {
       width: @leftWidth;
 
-      padding: 60px 0px;
+      padding: 50px 0px;
       .main-left-content {
+        border-radius: 15px;
         height: 100%;
         margin-left: 20%;
-        padding: 1vh;
+        padding: 10px;
         width: 80%;
         box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
       }
@@ -269,24 +235,53 @@ const next = () => {
 
     .main-right {
       width: calc(100vw - @leftWidth);
-      padding: 60px 60px;
+      padding: 50px 50px;
 
       #card {
         height: 100%;
+        box-shadow: var(--el-box-shadow-light);
+        padding: 5px;
+        border-radius: 15px;
+        .scrollbar-demo-item {
+          cursor: pointer;
+          display: flex;
+          align-items: flex-start;
+          justify-content: left;
+          width: 98%;
+          margin: 10px;
+          text-align: left;
+          border-radius: 15px;
+          background: var(--el-color-primary-light-9);
+          color: var(--el-color-primary);
+          .itemClass {
+            color: black;
+
+            p {
+              margin: 2vh;
+
+              i {
+                margin-right: 1vw;
+              }
+            }
+            p:hover {
+              color: dodgerblue;
+              text-decoration: underline;
+            }
+          }
+        }
       }
     }
   }
 }
 
 .el-carousel__item {
-  min-height: 510px;
+  min-height: 530px;
 
   h3 {
     color: #475669;
     font-size: 1.5rem;
     opacity: 0.75;
-    line-height: 510px;
-    margin: 0;
+    line-height: 530px;
     text-align: center;
   }
 }

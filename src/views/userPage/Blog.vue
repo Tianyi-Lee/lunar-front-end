@@ -2,7 +2,7 @@
   <div>
     <el-button type="primary" @click="newBlog">开始创作</el-button>
     <el-dialog
-      custom-class="theFuckingDialogClass"
+      :show-close="false"
       top="3vh"
       v-model="dialogVisible"
       center
@@ -120,8 +120,5 @@ const save = () => {
 <style>
 .v-note-help-wrapper {
   z-index: 6000 !important;
-}
-.theFuckingDialogClass {
-  margin-bottom: 0 !important;
 }
 </style>
