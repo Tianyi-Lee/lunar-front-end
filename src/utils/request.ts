@@ -12,7 +12,9 @@ const request = axios.create({
 request.interceptors.request.use(
   (config: any) => {
     config.headers["Content-Type"] = "application/json;charset=utf-8";
-    // config.headers["Token"] = "hahahaha!!!";
+    if (sessionStorage.getItem("token"))
+      config.headers["token"] = sessionStorage.getItem("token");
+
     return config;
   },
   (error) => {

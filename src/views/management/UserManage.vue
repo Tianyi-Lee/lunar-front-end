@@ -136,6 +136,7 @@ import request from "../../utils/request";
 import FDate from "../../utils/FormatedDate";
 import { ElMessage } from "element-plus";
 import { ref } from "vue";
+import { handleElButtonBlur } from "../../utils/handleButton";
 
 let tableData = ref([]);
 let searchContent = ref("");
@@ -191,7 +192,8 @@ function handleCurrentChange(changedPageNum: number) {
   currentPage.value = changedPageNum;
   load();
 }
-function add() {
+function add(e: any) {
+  handleElButtonBlur(e);
   userinfo.value = {
     userTel: "",
     userNickName: "",
@@ -240,7 +242,7 @@ function save() {
   }
 }
 
-load();
+// load();
 </script>
 
 <style scoped lang="less">

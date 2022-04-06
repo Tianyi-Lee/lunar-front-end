@@ -18,4 +18,7 @@ const userInfo = useUserInfoStore();
 .el-dialog {
   margin-bottom: 0 !important;
 }
+.v-note-help-wrapper {
+  z-index: 6000 !important;
+}
 </style>

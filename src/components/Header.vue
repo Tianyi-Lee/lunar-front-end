@@ -14,21 +14,21 @@
       <el-button
         style="border: none; font-size: larger"
         size="large"
-        @click="$router.push('/home')"
+        @click="goHome"
         ><i class="fa fa-home" aria-hidden="true"></i>home
       </el-button>
       <el-divider direction="vertical" />
       <el-button
         style="border: none; font-size: larger"
         size="large"
-        @click="$router.push('/userPage')"
+        @click="goUser"
         ><i class="fa fa-user" aria-hidden="true"></i>user</el-button
       >
       <el-divider direction="vertical" />
       <el-button
         style="border: none; font-size: larger"
         size="large"
-        @click="$router.push('/management')"
+        @click="goManager"
         ><i class="fa fa-tachometer" aria-hidden="true"></i>manager
       </el-button>
       <div style="width: 100%; display: flex; justify-content: center">
@@ -38,7 +38,12 @@
           placeholder="输入关键词搜索"
           :prefix-icon="Search"
         />
-        <el-button style="margin: 0 0 0 2vw" type="primary" :icon="Search" />
+        <el-button
+          style="margin: 0 0 0 2vw"
+          type="primary"
+          :icon="Search"
+          @click="search"
+        />
       </div>
     </div>
     <div class="right">
@@ -61,7 +66,7 @@
               ><i class="fa fa-bomb" aria-hidden="true"></i
               >攻击本站</el-dropdown-item
             >
-            <el-dropdown-item @click="$router.push('/')" divided
+            <el-dropdown-item @click="exit" divided
               ><i class="fa fa-sign-out" aria-hidden="true"></i
               >退出系统</el-dropdown-item
             >
@@ -74,13 +79,34 @@
 
 <script lang="ts" setup>
 import { ArrowDown } from "@element-plus/icons-vue";
-
 import { Search } from "@element-plus/icons-vue";
-
+import { ElMessage } from "element-plus";
 import { ref } from "vue";
-
+import router from "../router";
+import { handleElButtonBlur } from "../utils/handleButton";
 let username = ref("张三");
 let searchContent = ref("");
+const exit = () => {
+  sessionStorage.clear();
+  ElMessage({ type: "success", message: "退出成功" });
+  router.push("/");
+};
+
+const search = (e: any) => {
+  handleElButtonBlur(e);
+};
+function goHome(e: any) {
+  handleElButtonBlur(e);
+  router.push("/home");
+}
+function goUser(e: any) {
+  handleElButtonBlur(e);
+  router.push("/userPage");
+}
+function goManager(e: any) {
+  handleElButtonBlur(e);
+  router.push("/management");
+}
 </script>
 
 <style scoped>

@@ -106,6 +106,12 @@ const rules = reactive({
       message: "电话号码必须为11位数字",
       trigger: "change",
     },
+    {
+      min: 11,
+      max: 11,
+      message: "电话号码必须为11位数字",
+      trigger: "blur",
+    },
   ],
   userName: [
     {

@@ -24,7 +24,7 @@
         ></i>
       </div>
       <div class="right">
-        <ul @click="show()">
+        <ul>
           我的关注<br /><span>{{ userInfo.userFollowNumber }}</span>
         </ul>
         <el-divider direction="vertical" />
@@ -36,7 +36,11 @@
           我的文章<br /><span>{{ userInfo.userArticleNumber }}</span>
         </ul>
 
-        <el-button style="margin-left: 15vw" type="primary"
+        <el-button
+          style="margin-left: 15vw"
+          :icon="Edit"
+          type="primary"
+          @click="modifyInfo($event)"
           >修改个人资料</el-button
         >
       </div>
@@ -79,37 +83,56 @@
         }}
       </ul>
     </div>
+    <el-dialog top="3vh" v-model="dialogVisible" center width="35%">
+      <template #title>
+        <p style="font-size: 2rem">修改个人信息</p>
+      </template>
+      <div style="height: 66vh; overflow: auto">
+        <el-scrollbar style="padding-right: 1%">
+          <el-form :model="muserInfo" label-width="80px">
+            <el-form-item label="昵称">
+              <el-input v-model="muserInfo.userName" placeholder="请输入昵称" />
+            </el-form-item>
+            <el-form-item label="密码"> </el-form-item>
+            <el-form-item label="头像"> </el-form-item>
+            <el-form-item label="性别"> </el-form-item>
+            <el-form-item label="出生时间"> </el-form-item>
+            <el-form-item label="个性签名"> </el-form-item>
+            <el-form-item label="用户简介"> </el-form-item>
+            <el-form-item label="所在地址"> </el-form-item>
+          </el-form>
+        </el-scrollbar>
+      </div>
+      <template #footer>
+        <el-button type="primary">保存</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { Edit } from "@element-plus/icons-vue";
+import { handleElButtonBlur } from "../../utils/handleButton";
 import { ElMessage } from "element-plus";
 import { ref } from "vue";
 import request from "../../utils/request";
 
+const dialogVisible = ref(false);
 const userId = sessionStorage.getItem("userId");
 
-const userInfo: any = ref({
-  name: "",
-  avatar: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
-  gender: "男",
-  profile: "这是个人简介...",
-  signature: "这是个性签名...",
-  birthday: "2022-03-22",
-  area: "西北大学",
-});
+const userInfo: any = ref({});
+const muserInfo: any = ref({});
 
 const loaduserInfo = () => {
   request.get(`/user/${userId}/detail`).then((res: any) => {
     userInfo.value = res.data;
   });
 };
-// loaduserInfo();
-const show = () => {
-  ElMessage({
-    type: "success",
-    message: "hello",
-  });
+loaduserInfo();
+
+const modifyInfo = (e: any) => {
+  handleElButtonBlur(e);
+  dialogVisible.value = true;
 };
 </script>
 

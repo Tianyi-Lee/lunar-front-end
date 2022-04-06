@@ -71,6 +71,12 @@ const rules = reactive({
       message: "电话号码必须为11位数字",
       trigger: "change",
     },
+    {
+      min: 11,
+      max: 11,
+      message: "电话号码必须为11位数字",
+      trigger: "blur",
+    },
   ],
   userPassword: [
     {
@@ -92,8 +98,10 @@ function login(formEl: FormInstance | undefined) {
     if (valid) {
       request.post("/login", loginForm).then((res: any) => {
         if (res.code == "200") {
-          const response = res.data.user;
-          sessionStorage.setItem("userId", response.userId);
+          const user = res.data.user;
+          const token = res.data.token;
+          sessionStorage.setItem("userId", user.userId);
+          sessionStorage.setItem("token", token);
 
           ElMessage({
             type: "success",

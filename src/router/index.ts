@@ -1,3 +1,4 @@
+import { ElMessage } from "element-plus";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 
 const routes: Array<RouteRecordRaw> = [
@@ -144,7 +145,23 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from) => {
+router.beforeEach((to, from, next) => {
+  if (
+    to.path === "/" ||
+    to.path === "/login" ||
+    to.path === "/register" ||
+    sessionStorage.getItem("token")
+  ) {
+    next();
+  } else {
+    ElMessage({
+      type: "error",
+      message: "请先登录",
+    });
+    next({
+      path: "/login",
+    });
+  }
   if (typeof to.meta.title === "string") document.title = to.meta.title;
 });
 

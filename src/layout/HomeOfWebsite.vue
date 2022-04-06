@@ -34,56 +34,74 @@
               @click="show(item, index)"
             >
               <div class="itemClass">
-                <p style="font-size: 2rem">{{ item.blogTitle }}</p>
-
                 <p>
-                  <i class="fa fa-user" aria-hidden="true"></i
-                  >{{ item.blogAuthorName }}
-                  <i
-                    style="margin-left: 2vw"
-                    class="fa fa-clock-o"
-                    aria-hidden="true"
-                  ></i
-                  >{{ `创建时间` }}
-                </p>
-
-                <p>
-                  <i class="fa fa-tags" aria-hidden="true"></i
-                  ><el-tag
-                    style="margin-right: 1vw"
-                    class="ml-2 tag"
-                    effect="dark"
-                    v-for="tag in item.blogTags"
-                    >{{ tag }}</el-tag
+                  <span
+                    style="
+                      font-size: 2.5rem;
+                      display: inline-block;
+                      width: 20vw;
+                    "
+                    title="标题"
+                    class="withHover"
                   >
+                    {{ item.blogTitle }}
+                  </span>
+                  <span>
+                    <i class="fa fa-tags" aria-hidden="true"></i
+                    ><el-tag
+                      style="margin-right: 1vw"
+                      class="ml-2 tag"
+                      effect="dark"
+                      v-for="tag in item.blogTags"
+                      >{{ tag }}</el-tag
+                    >
+                  </span>
                 </p>
-                <p style="padding-left: 30px">{{ `${item.blogDigest}` }}</p>
+                <p>
+                  <span style="text-indent: 2em">
+                    <i class="fa fa-user" aria-hidden="true"></i>
+                    {{ item.blogAuthorName }}
+
+                    <i
+                      style="margin-left: 2vw"
+                      class="fa fa-clock-o"
+                      aria-hidden="true"
+                    ></i
+                    >{{ item.blogCreateTime }}
+                  </span>
+                </p>
+
+                <p style="text-indent: 2em">
+                  {{ item.blogDigest }}
+                </p>
               </div>
             </div>
           </el-scrollbar>
         </div>
       </div>
     </div>
-    <el-dialog
-      custom-class="theFuckingDialogClass"
-      :show-close="false"
-      top="3vh"
-      v-model="dialogVisible"
-      center
-      width="80%"
-    >
+    <el-dialog top="3vh" v-model="dialogVisible" center width="50%">
       <template #title>
-        <p style="font-size: 2rem; font-weight: 500">
-          {{ currentBlog.blogTitle }}
-        </p>
+        <span style="font-size: 2rem">{{ currentBlog.blogTitle }}</span>
       </template>
 
       <div style="height: 77vh; overflow: auto">
         <el-scrollbar style="padding-right: 1%">
+          <p>{{ currentBlog.blogAuthorName }}</p>
+          <p>{{ currentBlog.blogCreateTime }}</p>
+          <p>{{ currentBlog.blogCollectNumber }}</p>
+          <p>{{ currentBlog.blogDislikeNumber }}</p>
+          <p>{{ currentBlog.blogShareNumber }}</p>
+          <p>{{ currentBlog.blogLikeNumber }}</p>
+          <p>{{ currentBlog.blogTags }}</p>
+          <p>{{ currentBlog.blogVisitNumber }}</p>
           <Editor
+            v-model="currentBlog.blogContent"
+            :subfield="false"
+            :defaultOpen="'preview'"
+            :toolbarsFlag="false"
+            :editable="false"
             codeStyle="monokai"
-            fontSize="18px"
-            :html="false"
             style="height: 100%; width: 100%; min-height: 74vh"
           />
         </el-scrollbar>
@@ -95,83 +113,30 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import { ElMessage } from "element-plus";
+import request from "../utils/request";
 
-let blogItems = [
-  {
-    blogId: 1,
-    blogAuthorName: "海绵宝宝",
-    blogTitle: "Java",
-    blogDigest: "精通Java",
-    blogCreateTime: "2022-03-18",
-    blogTags: ["学习", "分享", "经验"],
-  },
-  {
-    blogId: 2,
-    blogAuthorName: "派大星",
-    blogTitle: "c++",
-    blogDigest: "精通c++",
-    blogCreateTime: "2022-03-18",
-    blogTags: ["学习", "分享", "经验"],
-  },
-  {
-    blogId: 3,
-    blogAuthorName: "李四",
-    blogTitle: "python",
-    blogDigest: "精通python",
-    blogCreateTime: "2022-03-18",
-    blogTags: ["学习", "分享", "经验"],
-  },
-  {
-    blogId: 4,
-    blogAuthorName: "王五",
-    blogTitle: "学习学个屁",
-    blogDigest: "学习学个屁",
-    blogCreateTime: "2022-03-18",
-    blogTags: ["学习", "分享", "经验"],
-  },
-  {
-    blogId: 5,
-    blogAuthorName: "老六",
-    blogTitle: "哈哈哈哈",
-    blogDigest: "哈哈哈",
-    blogCreateTime: "2022-03-18",
-    blogTags: ["学习", "分享", "经验"],
-  },
-];
+let blogItems: any = ref([]);
+
+request.get("/blog/hot").then((res: any) => {
+  if (res.code == "200") {
+    blogItems.value = res.data;
+  } else {
+    ElMessage({ type: "error", message: res.msg });
+  }
+});
 
 let dialogVisible = ref(false);
-
 let currentBlog: any = ref({});
 let currentIndex: number;
 
-const show = (selectedBlog: any, index: number) => {
-  currentBlog.value = selectedBlog;
+const show = async (selectedBlog: any, index: number) => {
+  await request.get(`/blog/${selectedBlog.blogId}`).then((res: any) => {
+    if (res.code == "200") {
+      currentBlog.value = res.data;
+    }
+  });
   currentIndex = index;
   dialogVisible.value = true;
-};
-const last = () => {
-  if (currentIndex === 0) {
-    ElMessage({
-      type: "warning",
-      message: "已经是第一个了",
-    });
-    return;
-  } else {
-    currentIndex--;
-    currentBlog.value = blogItems[currentIndex];
-  }
-};
-const next = () => {
-  if (currentIndex === blogItems.length - 1) {
-    ElMessage({
-      type: "warning",
-      message: "已经是最后一个了",
-    });
-    return;
-  } else {
-    currentIndex++;
-    currentBlog.value = blogItems[currentIndex];
-  }
 };
 </script>
 
@@ -240,7 +205,7 @@ const next = () => {
       #card {
         height: 100%;
         box-shadow: var(--el-box-shadow-light);
-        padding: 5px;
+        padding: 10px 5px;
         border-radius: 15px;
         .scrollbar-demo-item {
           cursor: pointer;
@@ -255,17 +220,15 @@ const next = () => {
           color: var(--el-color-primary);
           .itemClass {
             color: black;
-
+            .withHover:hover {
+              text-decoration: underline;
+              color: dodgerblue;
+            }
             p {
               margin: 2vh;
-
               i {
                 margin-right: 1vw;
               }
-            }
-            p:hover {
-              color: dodgerblue;
-              text-decoration: underline;
             }
           }
         }
