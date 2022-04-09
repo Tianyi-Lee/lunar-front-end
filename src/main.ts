@@ -18,10 +18,10 @@ import "./assets/css/font-awesome.min.css";
 import "animate.css";
 
 createApp(App)
-  .component("Editor", mavonEditor.mavonEditor)
-  .use(ElementPlus, {
-    locale: zhCn,
-  })
-  .use(router)
-  .use(createPinia())
-  .mount("#app");
+	.component("Editor", mavonEditor.mavonEditor)
+	.use(ElementPlus, {
+		locale: zhCn,
+	})
+	.use(router)
+	.use(createPinia())
+	.mount("#app");
