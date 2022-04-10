@@ -50,11 +50,11 @@
 		<div class="right">
 			<el-dropdown :hide-on-click="false" trigger="hover">
 				<el-button type="text" style="font-size: 1.25rem">
-					<div style="margin-right: 5px">
+					<div style="margin-right: 1vw">
 						<el-avatar :size="30" :src="userAvatar"></el-avatar>
 					</div>
-					{{ userName }}
-					<el-icon class="el-icon--right">
+					<span style="display: inline-block">{{ userName }}</span>
+					<el-icon>
 						<arrow-down />
 					</el-icon>
 				</el-button>
@@ -84,14 +84,19 @@ import { ref } from "vue";
 import router from "../router";
 import { useUserInfoStore } from "../stores/userInfo";
 import { handleElButtonBlur } from "../utils/handleButton";
+import request from "../utils/request";
 let searchContent = ref("");
 const userInfoStore = useUserInfoStore();
 const { userLimit, userName, userAvatar } = storeToRefs(userInfoStore);
 
 const exit = () => {
-	sessionStorage.clear();
-	ElMessage({ type: "success", message: "退出成功" });
-	router.push("/");
+	request.post("/logout").then((res: any) => {
+		if (res.code == "200") {
+			sessionStorage.clear();
+			ElMessage({ type: "success", message: "退出成功" });
+			router.push("/");
+		}
+	});
 };
 
 const search = (e: any) => {
@@ -143,6 +148,7 @@ i {
 .right {
 	width: 10vw;
 	text-align: center;
+	padding-right: 3%;
 	display: flex;
 	align-items: center;
 	justify-content: center;

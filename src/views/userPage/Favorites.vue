@@ -34,10 +34,7 @@ request
 			pageSize: 8,
 		},
 	})
-	.then((res: any) => {
-		console.log(res);
-		console.log("收藏列表加载成功");
-	});
+	.then((res: any) => {});
 </script>
 
 <style scoped lang="less">

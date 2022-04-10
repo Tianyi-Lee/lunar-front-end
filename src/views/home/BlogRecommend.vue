@@ -1,19 +1,22 @@
 <template>
 	<div class="blogRecommend">
-		<ul
-			@click="$router.push('/home/blog/' + item.blogId)"
-			class="item"
-			v-for="item in items"
-		>
-			<p>{{ item.blogTitle }}</p>
-			<span>
-				<i class="fa fa-tags" aria-hidden="true"></i
-				><el-tag effect="dark" v-for="tag in item.blogTags">{{ tag }}</el-tag>
-			</span>
-			<p>{{ item.blogAuthorName }}</p>
-			<p>{{ item.blogCreateTime }}</p>
-			<p>{{ item.blogDigest }}</p>
-		</ul>
+		<div class="content">
+			<ul
+				@click="$router.push('/home/blog/' + item.blogId)"
+				class="item"
+				v-for="item in items"
+			>
+				<p>{{ item.blogTitle }}</p>
+				<span>
+					<i class="fa fa-tags" aria-hidden="true"></i
+					><el-tag effect="dark" v-for="tag in item.blogTags">{{ tag }}</el-tag>
+				</span>
+				<p>{{ item.blogAuthorName }}</p>
+				<p>{{ item.blogCreateTime }}</p>
+				<p>{{ item.blogDigest }}</p>
+			</ul>
+		</div>
+
 		<el-pagination
 			style="justify-content: center"
 			layout="prev, pager, next"
@@ -56,6 +59,9 @@ const pageChange = (newPageNumber: number) => {
 <style scoped lang="less">
 .blogRecommend {
 	overflow-x: hidden;
+	.content {
+		height: 85%;
+	}
 }
 .item {
 	width: 100%;

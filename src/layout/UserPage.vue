@@ -59,7 +59,7 @@ const userPageItems = [
 
 #view {
 	width: calc(100vw - 180px - 30px);
-	height: calc(100vh - 8vh);
+	height: calc(100vh - 13vh);
 	padding: 1vh;
 }
 </style>

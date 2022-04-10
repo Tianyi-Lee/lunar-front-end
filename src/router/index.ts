@@ -1,5 +1,6 @@
 import { ElMessage } from "element-plus";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
+import { useUserInfoStore } from "../stores/userInfo";
 
 const routes: Array<RouteRecordRaw> = [
 	{
@@ -178,5 +179,21 @@ router.beforeEach((to, from, next) => {
 	}
 	if (typeof to.meta.title === "string") document.title = to.meta.title;
 });
-
+let userInfoStore: any = null;
+router.beforeResolve((to, from, next) => {
+	if (userInfoStore === null) {
+		userInfoStore = useUserInfoStore();
+	}
+	const userLimit = userInfoStore.getUserInfo.userLimit;
+	if (
+		(to.path === "/management/logStatistics" ||
+			to.path === "/management/infoManage" ||
+			to.path === "/management/userManage") &&
+		userLimit !== 0
+	)
+		next({
+			path: "/404",
+		});
+	else next();
+});
 export default router;

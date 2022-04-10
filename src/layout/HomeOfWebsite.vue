@@ -53,7 +53,7 @@
 											class="ml-2 tag"
 											effect="dark"
 											v-for="tag in item.blogTags"
-											>{{ tag }}</el-tag
+											>{{ tag.tagContent }}</el-tag
 										>
 									</span>
 								</p>
@@ -80,7 +80,7 @@
 				</div>
 			</div>
 		</div>
-		<el-dialog top="3vh" v-model="dialogVisible" center width="50%">
+		<el-dialog v-model="dialogVisible" center top="3vh" width="50vw">
 			<template #title>
 				<span style="font-size: 2rem">{{ currentBlog.blogTitle }}</span>
 			</template>

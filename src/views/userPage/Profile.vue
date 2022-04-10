@@ -49,7 +49,8 @@
 			</div>
 		</div>
 		<div class="middle">
-			<span style="margin: 0 2vw 0 0; font-weight: 600">个性签名:</span
+			<span style="margin: 0 2vw 0 3vw; font-size: 1.25rem; font-weight: 600"
+				>个性签名:</span
 			>{{ userInfo.userSignature }}
 		</div>
 		<el-divider content-position="center">*****</el-divider>
@@ -158,8 +159,8 @@
 				</el-scrollbar>
 			</div>
 			<template #footer>
-				<el-button @click="cancel">取消</el-button>
 				<el-button @click="save" type="primary">保存</el-button>
+				<el-button @click="cancel">取消</el-button>
 			</template>
 		</el-dialog>
 	</div>
@@ -319,7 +320,7 @@ const save = () => {
 			span {
 				display: inline-block;
 				width: 150px;
-				text-align: left;
+				text-align: center;
 				font-size: 1rem;
 				font-weight: 600;
 			}

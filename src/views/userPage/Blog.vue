@@ -3,7 +3,7 @@
 		<el-button :icon="DocumentAdd" type="primary" @click="newBlog"
 			>开始创作</el-button
 		>
-		<p>判断如果博客条数为0，则提示！！！</p>
+		<h1 v-if="items.length === 0">你还没有创建任何博客,快去创建一条博客吧</h1>
 		<el-dialog
 			top="3vh"
 			v-model="dialogVisible"
@@ -90,25 +90,30 @@
 									class="button-new-tag ml-1"
 									@click="showInput"
 								>
-									+ New Tag
+									+ 点击创建标签
 								</el-button>
+								<span v-if="dynamicTags.length === 0" style="color: red"
+									>!!!不创建任何标签则为默认</span
+								>
 							</div>
 						</el-form-item>
 						<el-form-item label="正文">
 							<Editor
+								ref="md"
 								v-model="blog.blogContent"
 								:toolbars="toolbars"
 								codeStyle="atom-one-light"
 								fontSize="16px"
 								:html="false"
 								style="height: 100%; width: 100%; min-height: 66vh"
+								@imgAdd="imgAdd"
 							/>
 						</el-form-item>
 						<el-form-item>
 							<div style="width: 100%; display: flex">
-								<el-button @click="dialogVisible = false">取消</el-button>
-								<div style="flex: 1"></div>
 								<el-button type="primary" @click="save">保存</el-button>
+								<div style="flex: 1"></div>
+								<el-button @click="cancel">取消</el-button>
 							</div>
 						</el-form-item>
 					</el-form>
@@ -121,10 +126,11 @@
 <script setup lang="ts">
 import { DocumentAdd } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
-import { nextTick, ref } from "vue";
+import { nextTick, onMounted, ref } from "vue";
 import type { ElInput } from "element-plus";
 import request from "../../utils/request";
 import { handleElButtonBlur } from "../../utils/handleButton";
+//md编辑器展示内容
 const toolbars = {
 	header: true, // 标题
 	bold: true, // 粗体
@@ -155,23 +161,23 @@ const toolbars = {
 	preview: true, // 预览
 };
 
+//加载我的博客
+const items: any = ref([]);
+
 //博客标签编辑
 const inputValue = ref("");
-const dynamicTags = ref(["默认"]);
+const dynamicTags = ref<string[]>([]);
 const inputVisible = ref(false);
 const InputRef = ref<InstanceType<typeof ElInput>>();
-
 const handleClose = (tag: string) => {
 	dynamicTags.value.splice(dynamicTags.value.indexOf(tag), 1);
 };
-
 const showInput = () => {
 	inputVisible.value = true;
 	nextTick(() => {
 		InputRef.value!.input!.focus();
 	});
 };
-
 const handleInputConfirm = () => {
 	if (inputValue.value) {
 		dynamicTags.value.push(inputValue.value);
@@ -181,6 +187,19 @@ const handleInputConfirm = () => {
 };
 //标签编辑结束
 
+//md中添加图片
+const md: any = ref(null);
+const imgAdd = (filename: String, imgFile: File) => {
+	const formData = new FormData();
+	formData.append("file", imgFile);
+	request.post("/upload", formData).then((res: any) => {
+		//上传成功替换md中的内容
+		if (res.code == "200")
+			if (md.value) md.value.$img2Url(filename, res.data.url);
+	});
+};
+
+//创建新的博客
 const blog: any = ref({
 	blogForm: 0,
 	blogType: 0,
@@ -189,16 +208,18 @@ const blog: any = ref({
 	blogContent: "",
 	tags: [],
 });
-
 const dialogVisible = ref(false);
 const newBlog = (e: any) => {
 	handleElButtonBlur(e);
 	dialogVisible.value = true;
 };
 const save = () => {
-	dynamicTags.value.map((item, index) => {
-		blog.value.tags[index] = item;
-	});
+	if (dynamicTags.value.length === 0) {
+		blog.value.tags[0] = "默认";
+	} else
+		dynamicTags.value.map((item, index) => {
+			blog.value.tags[index] = item;
+		});
 	request.post("/blog", blog.value).then((res: any) => {
 		if (res.code == "200") {
 			ElMessage({
@@ -213,6 +234,18 @@ const save = () => {
 			});
 		}
 	});
+};
+const cancel = () => {
+	dialogVisible.value = false;
+	blog.value = {
+		blogForm: 0,
+		blogType: 0,
+		blogTitle: "",
+		blogDigest: "",
+		blogContent: "",
+		tags: [],
+	};
+	dynamicTags.value.length = 0;
 };
 </script>
 

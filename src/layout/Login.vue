@@ -17,6 +17,7 @@
 				</el-form-item>
 				<el-form-item label="账号:" prop="userAccount">
 					<el-input
+						ref="accountRef"
 						:prefix-icon="User"
 						v-model="loginForm.userAccount"
 						placeholder="请输入账号"
@@ -48,14 +49,18 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from "vue";
+import { nextTick, onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { User, Lock } from "@element-plus/icons-vue";
 import request from "../utils/request";
-import { ElMessage } from "element-plus";
+import { ElNotification } from "element-plus";
 import type { FormInstance } from "element-plus";
 import { useUserInfoStore } from "../stores/userInfo";
 
+const accountRef: any = ref(null);
+onMounted(() => {
+	accountRef.value.focus();
+});
 const loginFormRef = ref<FormInstance>();
 const router = useRouter();
 
@@ -104,10 +109,20 @@ function login(formEl: FormInstance | undefined) {
 					sessionStorage.setItem("token", token);
 					sessionStorage.setItem("userId", user.userId);
 
-					ElMessage({
-						type: "success",
-						message: "用户登录成功！ 欢迎您 " + user.userName,
-					});
+					if (user.userLimit == 1)
+						ElNotification({
+							title: "success",
+							message: `用户 ${user.userName} 登陆成功`,
+							offset: 200,
+							type: "success",
+						});
+					else if (user.userLimit == 0)
+						ElNotification({
+							title: "success",
+							message: `管理员 ${user.userName} 登陆成功`,
+							offset: 200,
+							type: "success",
+						});
 
 					router.push("/home");
 
@@ -120,16 +135,18 @@ function login(formEl: FormInstance | undefined) {
 					};
 					useUserInfoStore().setUserInfo(userInfo);
 				} else {
-					ElMessage({
-						type: "error",
+					ElNotification({
+						title: "error",
 						message: res.msg,
+						type: "error",
 					});
 				}
 			});
 		} else {
-			ElMessage({
+			ElNotification({
+				title: "error",
+				message: "请正确填写信息",
 				type: "error",
-				message: "请填写正确的信息",
 			});
 			return false;
 		}

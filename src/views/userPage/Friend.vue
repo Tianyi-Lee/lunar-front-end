@@ -1,15 +1,33 @@
 <template>
 	<div class="friend">
-		<el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
-			<el-tab-pane label="我的关注" name="first">小孩</el-tab-pane>
-			<el-tab-pane label="我的粉丝" name="third">小明</el-tab-pane>
-		</el-tabs>
+		<div class="selectors">
+			<div class="selector">
+				<ul :class="{ active: isActive === true }" @click="follow">
+					<span>我的关注</span>
+				</ul>
+				<ul :class="{ active: isActive === false }" @click="fan">
+					<span>我的粉丝</span>
+				</ul>
+			</div>
+		</div>
+		<div class="content">
+			<el-card class="list">
+				<h2>好友列表</h2>
+				<el-divider style="margin: 4px"></el-divider>
+			</el-card>
+			<el-card class="detail">
+				<h2>详情信息</h2>
+				<el-divider style="margin: 4px"></el-divider>
+			</el-card>
+		</div>
 	</div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from "vue";
 import request from "../../utils/request";
+
+const isActive = ref(true);
 
 const userId = sessionStorage.getItem("userId");
 
@@ -21,10 +39,7 @@ const loadFriend = () => {
 				pageSize: 8,
 			},
 		})
-		.then((res: any) => {
-			console.log(res);
-			console.log(`关注的人列表加载成功`);
-		});
+		.then((res: any) => {});
 	request
 		.get(`/user/${userId}/fan/list`, {
 			params: {
@@ -32,28 +47,80 @@ const loadFriend = () => {
 				pageSize: 8,
 			},
 		})
-		.then((res: any) => {
-			console.log(res);
-			console.log(`粉丝列表加载成功`);
-		});
+		.then((res: any) => {});
 };
 loadFriend();
-
-const activeName = ref("first");
-const handleClick = (tab: string, event: Event) => {
-	console.log(tab, event);
+const follow = () => {
+	isActive.value = true;
+};
+const fan = () => {
+	isActive.value = false;
 };
 </script>
 
-<style scoped>
+<style scoped lang="less">
 .friend {
-	font-size: 1.5rem;
+	font-size: 1rem;
+}
+.selectors {
+	height: 5%;
+
+	.selector {
+		display: flex;
+	}
+
+	ul {
+		width: 10%;
+		text-align: center;
+		cursor: pointer;
+
+		span {
+			display: inline-block;
+		}
+	}
+
+	.active {
+		color: dodgerblue;
+		span::after {
+			content: "";
+			display: block;
+			width: 80%;
+			height: 3px;
+			background-color: dodgerblue;
+			margin-top: 9px;
+			transform: translateX(10%);
+			position: relative;
+			z-index: 1;
+		}
+	}
+}
+.selectors::after {
+	content: "";
+	display: block;
+	width: 100%;
+	height: 3px;
+	background-color: aliceblue;
+	margin-top: -3px;
+	transform: translateX(0);
 }
 
-.demo-tabs > .el-tabs__content {
-	padding: 32px;
-	color: #6b778c;
-	font-size: 32px;
-	font-weight: 600;
+.content {
+	height: 90%;
+	width: 100%;
+	margin-top: 3vh;
+	display: flex;
+	h2 {
+		margin: 0 auto;
+		text-align: center;
+	}
+	.list {
+		width: 30%;
+		margin-right: 3%;
+		display: grid;
+	}
+	.detail {
+		width: 100%;
+		display: grid;
+	}
 }
 </style>
