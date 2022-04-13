@@ -9,7 +9,12 @@
 				<p>{{ item.blogTitle }}</p>
 				<span>
 					<i class="fa fa-tags" aria-hidden="true"></i
-					><el-tag effect="dark" v-for="tag in item.blogTags">{{ tag }}</el-tag>
+					><el-tag
+						style="margin-right: 1vw"
+						effect="dark"
+						v-for="tag in item.blogTags"
+						>{{ tag.tagContent }}</el-tag
+					>
 				</span>
 				<p>{{ item.blogAuthorName }}</p>
 				<p>{{ item.blogCreateTime }}</p>
@@ -67,5 +72,7 @@ const pageChange = (newPageNumber: number) => {
 	width: 100%;
 	background-color: aliceblue;
 	margin: 5vh auto;
+	cursor: pointer;
+	border-radius: 15px;
 }
 </style>

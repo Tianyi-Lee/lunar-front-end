@@ -1,9 +1,57 @@
 <template>
-	<div>
-		<el-button :icon="DocumentAdd" type="primary" @click="newBlog"
-			>开始创作</el-button
-		>
-		<h1 v-if="items.length === 0">你还没有创建任何博客,快去创建一条博客吧</h1>
+	<div class="blog">
+		<div class="function">
+			<el-button :icon="DocumentAdd" type="primary" @click="newBlog"
+				>开始创作
+			</el-button>
+		</div>
+		<div class="content">
+			<ul
+				@click="$router.push(`/userPage/blog/${item.blogId}`)"
+				v-for="item in blogList"
+			>
+				<div class="itemOperate">
+					<el-button
+						size="small"
+						type="primary"
+						@click.stop="modifyBlog(item.blogId)"
+						>修改</el-button
+					>
+					<el-button
+						size="small"
+						type="danger"
+						@click.stop="removeBlog(item.blogId)"
+						>删除</el-button
+					>
+				</div>
+				<p>标题 {{ item.blogTitle }}</p>
+				<p>
+					<i class="fa fa-tags" aria-hidden="true"></i
+					><el-tag
+						style="margin-right: 1vw"
+						class="ml-2 tag"
+						effect="dark"
+						v-for="tag in item.blogTags"
+						>{{ tag.tagContent }}</el-tag
+					>
+				</p>
+				<p>创建时间 {{ item.blogCreateTime }}</p>
+				<p>简介 {{ item.blogDigest }}</p>
+			</ul>
+		</div>
+		<div class="pagination">
+			<el-pagination
+				style="justify-content: center"
+				layout="prev, pager, next"
+				:total="total"
+				:page-size="4"
+				@prev-click="pageChange"
+				@next-click="pageChange"
+				@current-change="pageChange"
+			/>
+		</div>
+
+		<!-- 以下为弹窗内容 -->
 		<el-dialog
 			top="3vh"
 			v-model="dialogVisible"
@@ -126,7 +174,7 @@
 <script setup lang="ts">
 import { DocumentAdd } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
-import { nextTick, onMounted, ref } from "vue";
+import { nextTick, ref } from "vue";
 import type { ElInput } from "element-plus";
 import request from "../../utils/request";
 import { handleElButtonBlur } from "../../utils/handleButton";
@@ -161,8 +209,42 @@ const toolbars = {
 	preview: true, // 预览
 };
 
+//分页插件初始化
+const userId = sessionStorage.getItem("userId");
+const pageNumber = ref(1);
+const pageSize = ref(4);
+const total = ref(0);
+const pageChange = (newPageNumber: number) => {
+	pageNumber.value = newPageNumber;
+	loadMyBlog();
+};
+
 //加载我的博客
-const items: any = ref([]);
+const blogList: any = ref([]);
+const loadMyBlog = () => {
+	request
+		.get(`/user/${userId}/blog/list`, {
+			params: {
+				pageNumber: pageNumber.value,
+				pageSize: pageSize.value,
+			},
+		})
+		.then((res: any) => {
+			blogList.value = res.data.rows;
+			total.value = new Number(res.data.total).valueOf();
+		});
+};
+loadMyBlog();
+
+//operate
+const modifyBlog = (blogId: number) => {
+	// request.put(`/blog/${blogId}`)
+};
+const removeBlog = (blogId: number) => {
+	request.delete(`/blog/${blogId}`).then((res: any) => {
+		loadMyBlog();
+	});
+};
 
 //博客标签编辑
 const inputValue = ref("");
@@ -249,4 +331,38 @@ const cancel = () => {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="less">
+.blog {
+	overflow-x: hidden;
+	.pagination {
+		width: 100%;
+	}
+}
+.function {
+	height: 6%;
+	display: flex;
+	align-items: center;
+}
+.content {
+	height: 80%;
+	ul {
+		cursor: pointer;
+		width: 100%;
+		background-color: aliceblue;
+		border-radius: 15px;
+		margin: 5vh auto;
+		position: relative;
+		.itemOperate {
+			display: none;
+			position: absolute;
+			left: 90%;
+			top: 35%;
+		}
+	}
+	ul:hover {
+		.itemOperate {
+			display: block;
+		}
+	}
+}
+</style>

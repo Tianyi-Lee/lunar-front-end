@@ -54,9 +54,6 @@
 						<el-avatar :size="30" :src="userAvatar"></el-avatar>
 					</div>
 					<span style="display: inline-block">{{ userName }}</span>
-					<el-icon>
-						<arrow-down />
-					</el-icon>
 				</el-button>
 				<template #dropdown>
 					<el-dropdown-menu>
@@ -76,7 +73,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowDown } from "@element-plus/icons-vue";
 import { Search } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
 import { storeToRefs } from "pinia";

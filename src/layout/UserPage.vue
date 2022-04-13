@@ -4,7 +4,7 @@
 		<div class="content">
 			<Aside :items="userPageItems" />
 			<el-card>
-				<router-view id="view" />
+				<router-view class="view" />
 			</el-card>
 		</div>
 	</div>
@@ -57,7 +57,7 @@ const userPageItems = [
 	width: 100vw;
 }
 
-#view {
+.view {
 	width: calc(100vw - 180px - 30px);
 	height: calc(100vh - 13vh);
 	padding: 1vh;

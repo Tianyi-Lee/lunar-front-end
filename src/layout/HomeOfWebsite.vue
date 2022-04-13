@@ -50,7 +50,6 @@
 										<i class="fa fa-tags" aria-hidden="true"></i
 										><el-tag
 											style="margin-right: 1vw"
-											class="ml-2 tag"
 											effect="dark"
 											v-for="tag in item.blogTags"
 											>{{ tag.tagContent }}</el-tag
