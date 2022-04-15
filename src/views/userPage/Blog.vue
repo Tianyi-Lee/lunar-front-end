@@ -14,7 +14,7 @@
 					<el-button
 						size="small"
 						type="primary"
-						@click.stop="modifyBlog(item.blogId)"
+						@click.stop="modifyBlog(item.blogId, item.blogDigest)"
 						>修改</el-button
 					>
 					<el-button
@@ -237,8 +237,22 @@ const loadMyBlog = () => {
 loadMyBlog();
 
 //operate
-const modifyBlog = (blogId: number) => {
-	// request.put(`/blog/${blogId}`)
+const modifiedBlog: any = ref({});
+const modifyBlog = (blogId: number, blogDigest: string) => {
+	request.get(`/blog/${blogId}`).then((res: any) => {
+		modifiedBlog.value.blogId = blogId;
+		modifiedBlog.value.blogDigest = blogDigest;
+		modifiedBlog.value.blogTitle = res.data.blogTitle;
+		modifiedBlog.value.blogForm = res.data.blogForm;
+		modifiedBlog.value.blogType = res.data.blogType;
+		modifiedBlog.value.tags = [];
+		res.data.blogTags.forEach((item: any) => {
+			dynamicTags.value.push(item.tagContent);
+		});
+		modifiedBlog.value.blogContent = res.data.blogContent;
+		blog.value = JSON.parse(JSON.stringify(modifiedBlog.value));
+		dialogVisible.value = true;
+	});
 };
 const removeBlog = (blogId: number) => {
 	request.delete(`/blog/${blogId}`).then((res: any) => {
@@ -297,25 +311,54 @@ const newBlog = (e: any) => {
 };
 const save = () => {
 	if (dynamicTags.value.length === 0) {
-		blog.value.tags[0] = "默认";
+		blog.value.tags.push("默认");
 	} else
-		dynamicTags.value.map((item, index) => {
-			blog.value.tags[index] = item;
+		dynamicTags.value.map((item) => {
+			blog.value.tags.push(item);
 		});
-	request.post("/blog", blog.value).then((res: any) => {
-		if (res.code == "200") {
-			ElMessage({
-				type: "success",
-				message: "创建成功",
-			});
-			dialogVisible.value = false;
-		} else {
-			ElMessage({
-				type: "error",
-				message: res.msg,
-			});
-		}
-	});
+	if (blog.value.blogId) {
+		request.put(`/blog/${blog.value.blogId}`, blog.value).then((res: any) => {
+			if (res.code == "200") {
+				ElMessage({
+					type: "success",
+					message: "修改成功",
+				});
+				dialogVisible.value = false;
+				loadMyBlog();
+			} else {
+				ElMessage({
+					type: "error",
+					message: res.msg,
+				});
+			}
+		});
+	} else {
+		request.post("/blog", blog.value).then((res: any) => {
+			if (res.code == "200") {
+				ElMessage({
+					type: "success",
+					message: "创建成功",
+				});
+				dialogVisible.value = false;
+				loadMyBlog();
+			} else {
+				ElMessage({
+					type: "error",
+					message: res.msg,
+				});
+			}
+		});
+	}
+	//
+	dynamicTags.value.length = 0;
+	blog.value = {
+		blogForm: 0,
+		blogType: 0,
+		blogTitle: "",
+		blogDigest: "",
+		blogContent: "",
+		tags: [],
+	};
 };
 const cancel = () => {
 	dialogVisible.value = false;
