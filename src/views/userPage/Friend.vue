@@ -138,15 +138,15 @@ const loadFriend = () => {
 		})
 		.then((res: any) => {
 			followList.value = res.data.rows;
+			followTotal.value = res.data.total;
 			if (isActive.value === true) {
 				showingList.value = followList.value;
-			}
-			if (showingList.value[0])
+				if (showingList.value[0])
 				loadRecord(
 					showingList.value[0].userId,
 					showingList.value[0].userAvatar
 				);
-			followTotal.value = res.data.total;
+			}
 		});
 	request
 		.get(`/user/${userId}/fan/list`, {
@@ -157,15 +157,15 @@ const loadFriend = () => {
 		})
 		.then((res: any) => {
 			fanList.value = res.data.rows;
+			fanTotal.value = res.data.total;
 			if (isActive.value === false) {
 				showingList.value = fanList.value;
-			}
-			if (showingList.value[0])
+				if (showingList.value[0])
 				loadRecord(
 					showingList.value[0].userId,
 					showingList.value[0].userAvatar
 				);
-			fanTotal.value = res.data.total;
+			}
 		});
 };
 loadFriend();
@@ -204,10 +204,16 @@ const loadRecord = (toId: number, UserAvatar: string) => {
 			});
 			currentUserAvatar.value = UserAvatar;
 			currentUserId.value = toId;
+			/**
+			 * 更新消息记录后，在下次dom更新后将滚动条拉到最底下
+			 */
+			nextTick(()=>{
+				if(scrollbarRef.value){
+				scrollbarRef.value.wrap$.scrollTop = scrollbarRef.value.wrap$.scrollHeight;
+			}
+			})
 		});
 };
-if (showingList[0])
-	loadRecord(showingList[0].userId, showingList[0].userAvatar);
 
 //鼠标右键点击处理
 const offset = ref(-90);
@@ -231,15 +237,10 @@ const sendMessage = () => {
 		formData.append("toId", new String(currentUserId.value).valueOf());
 		formData.append("messageContent", sendAreaText.value);
 	request.post("/message", formData).then((res: any) => {
-		loadFriend();
+		if(typeof currentUserId.value === "number")
+			loadRecord(currentUserId.value,currentUserAvatar.value)
 		sendAreaText.value = "";
 		ElMessage({ type: "success", message: "发送成功" });
-		// nextTick(()=>{
-		// 	if(scrollbarRef.value){
-		// 		console.log(scrollbarRef.value);
-		// 		scrollbarRef.value.wrap$.scrollTop = scrollbarRef.value.wrap$.scrollHeight+500
-		// 	}
-		// })
 	});
 };
 </script>
@@ -345,6 +346,9 @@ const sendMessage = () => {
 		li {
 			align-self: center;
 			list-style: none;
+			text-align: center;
+			font-size: 2.5rem;
+			color: dodgerblue;
 		}
 		.detail-content {
 			height: 100%;
@@ -368,7 +372,8 @@ const sendMessage = () => {
 				}
 			}
 			#sendArea {
-				width: 96%;
+				width: 97%;
+				padding: 1%;
 			}
 		}
 		.myMsgUl {

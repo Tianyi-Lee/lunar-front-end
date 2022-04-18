@@ -141,11 +141,14 @@ const loadFolderList = () => {
 			params: {
 				userId: userId,
 				pageNumber: 1,
-				pageSize: 8,
+				pageSize: 3,
 			},
 		})
 		.then((res: any) => {
 			folderList.value = res.data;
+			if(folderList.value.length !== 0){
+				showFolder(folderList.value[0].folderId,0)
+			}
 		});
 };
 loadFolderList();
@@ -169,13 +172,13 @@ const showFolder = (folderId: number, index: number) => {
 		})
 		.then((res: any) => {
 			selectedFolderContent.value = res.data.page.rows;
-			console.log(selectedFolderContent.value);
-			
 			selectedFolderContentTotal.value = res.data.page.total;
 			selectedFolderCreateTime.value = res.data.folderCreateTime;
 			selectedFolderName.value = res.data.folderName;
 		});
 };
+
+
 
 const offset = ref(-90);
 const visible = ref(false);
