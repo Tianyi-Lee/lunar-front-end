@@ -117,30 +117,22 @@ const routes: Array<RouteRecordRaw> = [
 		path: "/management",
 		name: "Management",
 		component: () => import("../layout/Management.vue"),
-		redirect: "/management/logStatistics",
+		redirect: "/management/userManage",
 		children: [
-			{
-				path: "logStatistics",
-				name: "LogStatistics",
-				component: () => import("../views/management/LogStatistics.vue"),
-				meta: {
-					title: "Lunar-日志统计",
-				},
-			},
-			{
-				path: "infoManage",
-				name: "InfoManage",
-				component: () => import("../views/management/InfoManage.vue"),
-				meta: {
-					title: "Lunar-信息管理",
-				},
-			},
 			{
 				path: "userManage",
 				name: "UserManage",
 				component: () => import("../views/management/UserManage.vue"),
 				meta: {
 					title: "Lunar-用户管理",
+				},
+			},
+			{
+				path: "blogManage",
+				name: "BlogManage",
+				component: () => import("../views/management/BlogManage.vue"),
+				meta: {
+					title: "Lunar-博客管理",
 				},
 			},
 		],
@@ -161,12 +153,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-	if (
-		to.path === "/" ||
-		to.path === "/login" ||
-		to.path === "/register" ||
-		sessionStorage.getItem("token")
-	) {
+	if (to.path === "/" || to.path === "/login" || to.path === "/register" || sessionStorage.getItem("token")) {
 		next();
 	} else {
 		ElMessage({
@@ -185,12 +172,7 @@ router.beforeResolve((to, from, next) => {
 		userInfoStore = useUserInfoStore();
 	}
 	const userLimit = userInfoStore.getUserInfo.userLimit;
-	if (
-		(to.path === "/management/logStatistics" ||
-			to.path === "/management/infoManage" ||
-			to.path === "/management/userManage") &&
-		userLimit !== 0
-	)
+	if ((to.path === "/management/blogManage" || to.path === "/management/userManage") && userLimit !== 0)
 		next({
 			path: "/404",
 		});
