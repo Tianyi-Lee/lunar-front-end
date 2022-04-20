@@ -44,15 +44,7 @@
 									<el-icon><check /></el-icon>已发送
 								</p>
 								<p id="messageContent">{{ item.messageContent }}</p>
-								<p
-								style="color: red; margin-left: 1%;width: 40px;"
-								v-if="item.messageIfRead == 0 && item.messageSenderId != userId"
-								>
-								未读
-								</p>
 							</p>
-							
-							
 						</ul>
 						<div id="sendArea">
 							<el-input
@@ -95,11 +87,36 @@
 					</el-card>
 				</template>
 				<div style="display: grid">
-					<div style="display: flex">
-						<el-button type="primary" @click="showUserDetail"
-							>查看用户</el-button
-						>
-						<el-button type="danger" @click="cancelFollow">取关用户</el-button>
+					<div style="display: flex;justify-content: center;">
+						<el-popover placement="left" trigger="click">
+      				<template #reference>
+								<el-button type="primary" @click="showUserDetail">查看用户</el-button>
+							</template>
+							<div style="display: grid;">
+								<p class="author"><span>作者:</span> {{ userDetail.userName }}</p>
+								<el-avatar :size="50" alt="加载失败" :src="userDetail.userAvatar" />
+								<p><span>性别: </span>{{ userDetail.userGender }}</p>
+								<p><span>个性签名: </span>{{ userDetail.userSignature }}</p>
+								<p><span>ta关注的人: </span>{{ userDetail.userFollowNumber }}</p>
+								<p><span>关注ta的人: </span>{{ userDetail.userFansNumber }}</p>
+								<p><span>文章数: </span>{{ userDetail.userArticleNumber }}</p>
+								<p><span>所在地区: </span>{{ userDetail.userArea }}</p>
+							</div>
+						</el-popover>
+						<el-popconfirm
+							v-if="isActive === true"
+    					confirm-button-text="确定"
+    					cancel-button-text="不,我再想想"
+    					:icon="InfoFilled"
+    					icon-color="red"
+    					title="确定取消关注?"
+							@confirm="cancelFollow"
+							@cancel="cancel"
+  						>
+    					<template #reference>
+								<el-button  type="danger">取关用户</el-button>
+							</template>
+  					</el-popconfirm>
 					</div>
 
 					<el-button type="text" @click="cancel">取消</el-button>
@@ -114,7 +131,8 @@ import { ElMessage } from "element-plus";
 import { nextTick, ref } from "vue";
 import { useUserInfoStore } from "../../stores/userInfo";
 import request from "../../utils/request";
-import {Check} from '@element-plus/icons-vue'
+import {Check,InfoFilled } from '@element-plus/icons-vue'
+import { handleElButtonBlur } from "../../utils/handleButton";
 const userId = sessionStorage.getItem("userId");
 const myAvatar = ref(useUserInfoStore().getUserInfo.userAvatar);
 const scrollbarRef:any = ref(null)
@@ -218,13 +236,31 @@ const loadRecord = (toId: number, UserAvatar: string) => {
 //鼠标右键点击处理
 const offset = ref(-90);
 const visible = ref(false);
+const operatedUserId = ref<number>()
 const operate = (userId: number, index: number) => {
 	offset.value = -90;
 	offset.value = offset.value - index * 69;
+	operatedUserId.value = userId;
 	visible.value = true;
 };
-const showUserDetail = () => {};
-const cancelFollow = () => {};
+
+const userDetail = ref<any>({userName:""})
+const showUserDetail = (e:any) => {
+	handleElButtonBlur(e);
+	request.get(`/user/${operatedUserId.value}/detail`).then((res:any)=>{
+		userDetail.value = res.data;
+		console.log(res.data);
+		
+	})
+	
+};
+const cancelFollow = () => {
+	console.log(operatedUserId.value);
+	request.delete(`/user/${operatedUserId.value}/follow`).then((res:any)=>{
+		ElMessage({type:"success",message:"取消关注成功"})
+		loadFriend()
+	})
+};
 const cancel = () => {
 	visible.value = false;
 };

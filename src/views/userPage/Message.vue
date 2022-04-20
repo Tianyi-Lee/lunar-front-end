@@ -10,8 +10,8 @@
 			<el-table size="large" :data="tableData" table-layout="fixed">
 				<el-table-column>
 					<template #default="props">
-						<el-badge is-dot style="margin-right: 1vw">
-							<el-button size="small" @click="handleReaded(props.row)">标为已读</el-button>
+						<el-badge :is-dot="props.row.messageIfRead === 0" style="margin-right: 1vw">
+							<el-button size="small" @click="handleReaded(props.row.messageId)">标为已读</el-button>
 						</el-badge>
 						<el-button type="primary" size="small" @click="openDialog(props.row, $event)">查看详情</el-button>
 					</template>
@@ -32,11 +32,14 @@
 					</template>
 				</el-table-column>
 				<el-table-column>
-					<template #default="props"> 已读状态: {{ props.row.messageIfRead }} </template>
+					<template #default="props">
+						<span style="color: red" v-if="props.row.messageIfRead === 0">未读</span
+						><span style="color: dodgerblue" v-else>已读</span>
+					</template>
 				</el-table-column>
 				<el-table-column fixed="right">
 					<template #default="props">
-						<el-button size="small" type="danger" @click="handleDelete(props.row)">删除</el-button>
+						<el-button size="small" type="danger" @click="handleDelete(props.row.messageId)">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -137,9 +140,17 @@
 			}
 		});
 	};
-	const handleReaded = (row: any) => {};
+	const handleReaded = (messageId: number) => {
+		request.put("message", { readMessageIds: [messageId] }).then((res: any) => {
+			loadMessage();
+		});
+	};
 
-	const handleDelete = (row: any) => {};
+	const handleDelete = (messageId: number) => {
+		request.delete(`/message/${messageId}`).then((res: any) => {
+			loadMessage();
+		});
+	};
 </script>
 
 <style scoped lang="less">
@@ -171,9 +182,7 @@
 		min-height: 10vh;
 		text-align: center;
 		p {
-			border: 1px solid var(--el-border-color);
-			margin-bottom: 5%;
-			min-height: 100%;
+			font-size: 1.25rem;
 		}
 	}
 </style>

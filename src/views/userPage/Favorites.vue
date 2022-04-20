@@ -106,9 +106,13 @@
 					
 				</p>
 				<el-divider content-position="center">***</el-divider>
-				<ul @click="$router.push(`/userPage/blog/${item.blogId}`)" v-for="item in selectedFolderContent">
+				<ul @click="$router.push(`/userPage/blog/${item.blogId}`)" v-for="(item,index) in selectedFolderContent">
+					
 					<p>标题:{{item.blogTitle}}</p>
 					<p>简介{{item.blogDigest}}</p>
+					<p class="itemOperate">
+						<el-button  size="small" type="danger" @click.stop="removeBlog(item.blogId,index)">从收藏夹移除</el-button>
+					</p>
 					<p>作者{{item.blogAuthorName}}</p>
 					<p>创建时间{{item.blogCreateTime}}</p>
 					<p>
@@ -238,6 +242,15 @@ const createFolder = () => {
 			}
 		});
 };
+
+const removeBlog = (blogId:number,index:number)=>{
+	const formData = new FormData();
+	formData.append("folderId", new String(selectedFolderId.value).valueOf());
+	request.delete(`/blog/${blogId}/collect`,{data:formData}).then((res:any)=>{
+		ElMessage({type:"success",message:"移除成功"})
+		selectedFolderContent.value.splice(index, 1)
+	})
+}
 </script>
 
 <style scoped lang="less">
@@ -278,7 +291,18 @@ const createFolder = () => {
 			margin: 1vh auto;
 			cursor: pointer;
 			border-radius: 15px;
+			.itemOperate {
+				display: none;
+				position: absolute;
+				right: 5%;
+			}
+			&:hover{
+				.itemOperate {
+					display: block;
+				}
+			}
 		}
+		
 	}
 }
 </style>
