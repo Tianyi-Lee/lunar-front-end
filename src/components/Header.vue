@@ -18,10 +18,10 @@
 			<el-button style="border: none; font-size: larger" size="large" @click="goUser"
 				><i class="fa fa-user" aria-hidden="true"></i>user</el-button
 			>
-			<el-divider v-if="userLimit === 0" direction="vertical" />
+			<!-- <el-divider v-if="userLimit === 0" direction="vertical" />
 			<el-button v-if="userLimit === 0" style="border: none; font-size: larger" size="large" @click="goManager"
 				><i class="fa fa-tachometer" aria-hidden="true"></i>manager
-			</el-button>
+			</el-button> -->
 			<div style="width: 100%; display: flex; justify-content: center">
 				<el-input v-model="searchContent" style="width: 40%" placeholder="输入关键词搜索" :prefix-icon="Search" />
 				<el-button style="margin: 0 0 0 2vw" type="primary" :icon="Search" @click="search" />
